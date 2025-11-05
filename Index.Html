@@ -12,20 +12,22 @@
 
     <!-- HTML CODE -->
     <div id="HEADER">
-        <div id="NAME">Expense Tracker</div>
+        <div id="NAME">Expense Tracker 💵</div>
         <div id="ABOUT">Manage your finances with ease</div>
+        <div id="WEBSITENAMEDIV">
+            <div id="WEBSITENAME">
+                <h2>💸</h2>
+            </div>
+        </div>
     </div>
 
     <!-- CARD    -->
     <div id="MAIN_1_BODY">
-        <div id="MAIN_1">
-            <p class="MAIN_1">Total Expenses 💸</p>
-        </div>
         <div id="MAIN_2">
             <p class="MAIN_2">Top Category 📊</p>
         </div>
         <div id="MAIN_3">
-            <p class="MAIN_3">Categories 📊</p>
+            <!-- <p class="MAIN_3">Categories 📊</p> -->
         </div>
     </div>
 
@@ -61,7 +63,38 @@
 
             <button id="ADD_EXPENSE_BUTTON" type="button"> + ADD EXPENSE</button>
 
-            <p class="success" id="success">Good To Go</p>
+            <p class="success" id="success"></p>
+        </div>
+
+        <!-- EDIT FORM -->
+        <div id="EDIT_FORM">
+            <p id="EDIT_EXPENSE">EDIT EXPENSE</p>
+
+            <p class="HEADING">Edit Expense Title *</p>
+            <input id="title" name="title" type="text" placeholder="e.g Grocery Shopping" required>
+            <p class="error" id="titleError">Title is required</p>
+
+            <p class="HEADING">Edit Amount ($) *</p>
+            <input id="amount" name="amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" required>
+            <p class="error" id="amountError">Amount is required</p>
+
+            <p class="HEADING">Edit Category *</p>
+            <select id="category" name="category" required>
+                <option value="" disabled selected>Select Category</option>
+                <option value="food">Food</option>
+                <option value="transport">Transport</option>
+                <option value="shopping">Shopping</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="others">Others</option>
+            </select>
+            <p class="error" id="categoryError">Category is required</p>
+
+            <p class="HEADING">Edit Date *</p>
+            <input id="date" name="date" type="date" required>
+            <p class="error" id="dateError">Date is required</p>
+
+            <button id="EDIT_EXPENSE_BUTTON" type="button">SAVE CHANGES ✅</button>
+
         </div>
 
 
@@ -78,8 +111,7 @@
                     <option value="entertainment">Entertainment</option>
                     <option value="others">Others</option>
                 </select>
-                <input id="startDate" name="startDate" type="date">
-                <input id="endDate" name="endDate" type="date">
+                <button id="applyFilter">Apply Filter</button>
             </div>
 
             <!-- HISTORY TABLE -->
@@ -90,17 +122,20 @@
                     <p class="TABLE_DATA">Amount</p>
                     <p class="TABLE_DATA">Category</p>
                     <p class="TABLE_DATA">Date</p>
-                    <p class="TABLE_DATA">Actions</p>
+                    <p class="TABLE_DATA">Action</p>
+                </div>
+                <div class="SHOW_EXPENSE_PARENT_DIV">
+                    <div class="SHOW_EXPENSE">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="SHOW_EXPENSE_PARENT_DIV">
-        <div class="SHOW_EXPENSE">
-        </div>
-    </div>
 
+
+
+    <button id="clearAll">Clear All Expenses</button>
 
     <script src="Script.JS"></script>
 </body>
