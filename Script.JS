@@ -120,7 +120,7 @@ function storeExpense() {
         : 'id-' + Date.now() + '-' + Math.floor(Math.random() * 1e6);
 
 
-        // CREATING AN OBJECT TO STORE SINGLE EXPENSE 
+    // CREATING AN OBJECT TO STORE SINGLE EXPENSE 
     let expenseObject = {
         id: id,
         title: title.value,
@@ -140,13 +140,16 @@ let showExpense = document.querySelector(".SHOW_EXPENSE"); // ACCESS THE MAIN TA
 
 
 // THIS FUNCTION ID GOING TO DISPLAY ALL THE EXPENSES
-function displayExpense() { 
+function displayExpense(expenseArray = expense) {
     showExpense.innerHTML = ""; // IT CLEAR ALL OLD EXPENSE DATA FROM THE SCREEN ( TABLE ) BEFORE SHOWING THE UPDATED LIST
 
-    expense.forEach((exp) => {
+    expenseArray.forEach((exp) => {
         // YOU ARE SELECTING ONE OBJECT AS EXP FROM THE ARRAY TO SHOW THE DATA ON SCREEN THROUGH DOM 
         let P = document.createElement("P"); // CREATE P TAG 
         P.classList.add("SHOW_DATA"); // ADDING CSS 
+
+
+        // DELETE BUTTON 
 
         let deleteButton = document.createElement("button"); // DELETE BUTTON IN THE RIGHT SIDE 
         deleteButton.classList.add("DELETE_BUTTON"); // ADDING CSS CLASS TO DELETE BUTTON 
@@ -162,6 +165,26 @@ function displayExpense() {
             SHOW_TOTAL_NUMBER_OF_CATEGORIES();
         });
 
+        // EDIT BUTTON 
+        let EditButton = document.createElement("button") // CREATE ELEMENT 
+        EditButton.classList.add("EDIT_BUTTON") // ADDING CLASS CSS DONE
+        EditButton.innerText = "EDIT" // ADDING INNER TEXT 
+        EditButton.setAttribute("data-id", exp.id); // SETTING ATTRIBUTE 
+ 
+        let EDIT_FORM = document.getElementById("EDIT_FORM")
+        let EDIT_EXPENSE_BUTTON = document.getElementById("EDIT_EXPENSE_BUTTON")
+
+        EditButton.addEventListener("click",function(e){
+            // FINDING THE SPECIFIC ONE
+           const idToEdit = e.currentTarget.getAttribute("data-id");
+           const expenseToEdit = expense.find(item => item.id === idToEdit);
+           EDIT_FORM.style.display = "block";
+        })
+
+        EDIT_EXPENSE_BUTTON.addEventListener("click",function(){
+            EDIT_FORM.style.display = "none"
+        })
+
         P.innerHTML = `
             <span>${exp.title}</span>
             <span>${exp.amount}</span>
@@ -170,6 +193,7 @@ function displayExpense() {
         `;
 
         P.appendChild(deleteButton);
+        P.appendChild(EditButton)
         showExpense.appendChild(P);
     });
 }
@@ -186,5 +210,54 @@ document.getElementById("clearAll").addEventListener("click", () => {
 });
 
 // -------------------- INITIAL LOAD --------------------
+
+// WHEN WE OPEN THE PAGE IT WILL SHOW THE EXPENSES AND TOTAL EXPENSES BECAUSE THE FUNCTION RUNS 
 displayExpense();
-SHOW_TOTAL_NUMBER_OF_CATEGORIES(); 
+SHOW_TOTAL_NUMBER_OF_CATEGORIES();
+
+
+//                              FILTER FEATURE ✌️
+
+let filterCategory = document.getElementById("filterCategory") // CATEGORY SELECT FOR FILTER 
+let applyFilter = document.getElementById("applyFilter") // APPLY FILTER BUTTON 
+
+// applyFilter.addEventListener("click", function () {
+//     let selected = filterCategory.value; // GET THE SELECTED VALUE FROM THE DROPDOWN 
+//     let FilterExpense = []
+//     if(selected == "Shopping") {
+//         FilterExpense = expense.filter(exp => exp.category === "Shopping");
+//     } 
+//     else if (selected == "Transport") {
+//         FilterExpense = expense.filter(exp => exp.category === "Transport");
+//     } 
+//     else if (selected == "Food") {
+//         FilterExpense = expense.filter(exp => exp.category === "Food");
+//     } 
+//     else if (selected == "Entertainment") {
+//         FilterExpense = expense.filter(exp => exp.category === "Entertainment");
+//     } 
+//     else if (selected == "Others") {
+//         FilterExpense = expense.filter(exp => exp.category === "Others");
+//     }
+// })
+
+applyFilter.addEventListener("click", function () {
+    let selectedCategory = filterCategory.value
+
+    // CREATE A VARIABLE
+    let FilterExpense
+
+    if (selectedCategory == "All" || selectedCategory == "Others") {
+        displayExpense() // TO SHOW ALL EXPENSE
+    }
+    else {
+        FilterExpense = expense.filter(exp => exp.category === selectedCategory)
+        if (FilterExpense.length == 0) {
+            console.log("NO CATEGORY FOUND") 
+            showExpense.innerHTML = `<p>NO CATEGORY FOUND REGARDING ✌️🥲</p>`
+        } else {
+            displayExpense(FilterExpense)
+        }
+    }
+})
+
