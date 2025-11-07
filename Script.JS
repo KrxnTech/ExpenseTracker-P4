@@ -14,6 +14,22 @@ let categoryError = document.getElementById("categoryError");
 let dateError = document.getElementById("dateError");
 let success = document.getElementById("success");
 
+
+let currentEditId = null; // THIS IS GOING TO STORE THE ID OF THE EXPENSE THAT WE WANT TO EDIT
+
+
+// CELEBRATION BUTTON EXPENSE EDITED
+// let EDIT_DONE = document.createElement("DIV")
+// EDIT_DONE.classList.add("EDIT_DONE")
+// EDIT_DONE.innerText = "Expense Edit Successfully"
+// let EDIT_FORM = Document.getElementById('EDIT_FORM')
+// EDIT_FORM.appendChild(EDIT_DONE)
+
+// function Edit_Celebration() {
+//     EDIT_DONE.style.display = "block"
+// }
+
+
 // CLEANING ERROR 
 function clearError() {
     titleError.style.display = "none";
@@ -30,7 +46,7 @@ function clearError() {
     ADD.style.display = "none";
 }
 
-// CELEBRATION BUTTON
+// CELEBRATION BUTTON EXPENSE ADDED 
 let ADD = document.createElement("DIV");
 ADD.classList.add("ADD");
 ADD.innerText = "Expense Added Successfully ✅";
@@ -39,6 +55,7 @@ form.appendChild(ADD);
 function celebration() {
     ADD.style.display = "block";
 }
+
 
 // -------------------- TOTAL EXPENSE COUNTER --------------------
 function SHOW_TOTAL_NUMBER_OF_CATEGORIES() {
@@ -133,6 +150,7 @@ function storeExpense() {
     localStorage.setItem("expenses", JSON.stringify(expense)); // STORE THE ARRAY LOCALLY 
     displayExpense(); // CALL THE FUCNTION TO SHOW THE EXPENSES 
     SHOW_TOTAL_NUMBER_OF_CATEGORIES(); // CALL THE FUNCTION WHICH SHOW THE TOTAL NUMBER OF EXPENSES 
+    updateChart(); // CALL THE FUNCTION TO UPDATE THE CHART 
 }
 
 // -------------------- DISPLAY EXPENSES --------------------
@@ -163,6 +181,7 @@ function displayExpense(expenseArray = expense) {
             localStorage.setItem("expenses", JSON.stringify(expense)); // STORE THE ARRAY LOCALLY 
             displayExpense(); // IT SHOW THE UPDATED EXPENSE AND IT DELETE FROM THE ARRAY AND SHOW THEM ON THE SCREEN 
             SHOW_TOTAL_NUMBER_OF_CATEGORIES();
+            updateChart();
         });
 
         // EDIT BUTTON 
@@ -170,19 +189,75 @@ function displayExpense(expenseArray = expense) {
         EditButton.classList.add("EDIT_BUTTON") // ADDING CLASS CSS DONE
         EditButton.innerText = "EDIT" // ADDING INNER TEXT 
         EditButton.setAttribute("data-id", exp.id); // SETTING ATTRIBUTE 
- 
+
         let EDIT_FORM = document.getElementById("EDIT_FORM")
         let EDIT_EXPENSE_BUTTON = document.getElementById("EDIT_EXPENSE_BUTTON")
 
-        EditButton.addEventListener("click",function(e){
+        EditButton.addEventListener("click", function (e) {
+            EDIT_FORM.style.display = "block";
+            clearForm()
+
             // FINDING THE SPECIFIC ONE
-           const idToEdit = e.currentTarget.getAttribute("data-id");
-           const expenseToEdit = expense.find(item => item.id === idToEdit);
-           EDIT_FORM.style.display = "block";
+            const idToEdit = e.currentTarget.getAttribute("data-id");
+            currentEditId = idToEdit; // STORING THE ID IN THE CURRENTEDITID 
+            const expenseToEdit = expense.find(item => item.id === idToEdit); // WHEN WE CLICK ON ANY EXPENSE IT WILL SHOW THE INFORMATION OF THAT EXPENSE
+
+            // ACESS ALL BY THERE ID 
+            let edit_title = document.getElementById("edit_title")
+            let edit_amount = document.getElementById("edit_amount")
+            let edit_category = document.getElementById("edit_category")
+            let edit_date = document.getElementById("edit_date")
+
+            // WHEN YOU CLICK ON THE ANY EXPENSE IT WILL SHOW THE INFORMATION OF THAT EXPENSE IN THE EDIT FORM
+            edit_title.value = expenseToEdit.title
+            edit_amount.value = expenseToEdit.amount
+            edit_category.value = expenseToEdit.category
+            edit_date.value = expenseToEdit.date
+
+            // OPTIONAL WORK UI BETTER
+            form.style.opacity = "0.5";
+            form.style.pointerEvents = "none";
+
         })
 
-        EDIT_EXPENSE_BUTTON.addEventListener("click",function(){
+        // TO HIDE THE EDIT FORM WHEN WE CLICK ON THIS BUTTON IT WILL HIDE THE FORM 
+        EDIT_EXPENSE_BUTTON.addEventListener("click", function () {
             EDIT_FORM.style.display = "none"
+
+            // TAKE THE VALUE OF INPUT FROM THE EDIT FORM 
+            let updatedTitle = document.getElementById('edit_title').value.trim() // IT WILL REMOVE THE SPACE ALSO FROM THE TRAILING AND FROM THE LEADING 
+            let updatedAmount = document.getElementById('edit_amount').value.trim()
+            let updatedCategory = document.getElementById('edit_category').value
+            let updatedDate = document.getElementById('edit_date').value
+
+
+            // FIND AND UPDATE THE EXPENSE IN THE ARRAY USING THE FINDINDEX FUNCTION 
+            let index = expense.findIndex(item => item.id === currentEditId)
+            if (index !== -1) {
+                expense[index].title = updatedTitle
+                expense[index].amount = updatedAmount
+                expense[index].category = updatedCategory
+                expense[index].date = updatedDate
+            }
+
+            // SAVE TO LOCAL STORAGE 
+            localStorage.setItem('expenses', JSON.stringify(expense))
+
+            // RE - DISPLAY EVERYTHING 
+            displayExpense()
+            SHOW_TOTAL_NUMBER_OF_CATEGORIES()
+            updateChart();
+
+            currentEditId = null
+
+            // OPTIONAL WORK UI BETTER 
+            form.style.opacity = "1";
+            form.style.pointerEvents = "auto";
+
+            // CALL THE FUNCTION 
+            // Edit_Celebration()
+
+
         })
 
         P.innerHTML = `
@@ -221,25 +296,6 @@ SHOW_TOTAL_NUMBER_OF_CATEGORIES();
 let filterCategory = document.getElementById("filterCategory") // CATEGORY SELECT FOR FILTER 
 let applyFilter = document.getElementById("applyFilter") // APPLY FILTER BUTTON 
 
-// applyFilter.addEventListener("click", function () {
-//     let selected = filterCategory.value; // GET THE SELECTED VALUE FROM THE DROPDOWN 
-//     let FilterExpense = []
-//     if(selected == "Shopping") {
-//         FilterExpense = expense.filter(exp => exp.category === "Shopping");
-//     } 
-//     else if (selected == "Transport") {
-//         FilterExpense = expense.filter(exp => exp.category === "Transport");
-//     } 
-//     else if (selected == "Food") {
-//         FilterExpense = expense.filter(exp => exp.category === "Food");
-//     } 
-//     else if (selected == "Entertainment") {
-//         FilterExpense = expense.filter(exp => exp.category === "Entertainment");
-//     } 
-//     else if (selected == "Others") {
-//         FilterExpense = expense.filter(exp => exp.category === "Others");
-//     }
-// })
 
 applyFilter.addEventListener("click", function () {
     let selectedCategory = filterCategory.value
@@ -248,16 +304,65 @@ applyFilter.addEventListener("click", function () {
     let FilterExpense
 
     if (selectedCategory == "All" || selectedCategory == "Others") {
-        displayExpense() // TO SHOW ALL EXPENSE
+        displayExpense() // TO SHOW ALL EXPENSE 
     }
     else {
         FilterExpense = expense.filter(exp => exp.category === selectedCategory)
         if (FilterExpense.length == 0) {
-            console.log("NO CATEGORY FOUND") 
+            console.log("NO CATEGORY FOUND")
             showExpense.innerHTML = `<p>NO CATEGORY FOUND REGARDING ✌️🥲</p>`
         } else {
             displayExpense(FilterExpense)
         }
     }
 })
+
+
+
+// -------------------- CHART --------------------
+const ctx = document.getElementById('expenseChart').getContext('2d');
+
+function getCategoryTotals() {
+    const totals = {};
+    expense.forEach(item => {
+        if (!totals[item.category]) totals[item.category] = 0;
+        totals[item.category] += Number(item.amount);
+    });
+    return totals;
+}
+
+const totals = getCategoryTotals();
+
+const chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: Object.keys(totals),
+        datasets: [{
+            label: 'Expense Breakdown',
+            data: Object.values(totals),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#8B5CF6', '#22C55E'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Your Expense Chart'
+            }
+        }
+    }
+});
+
+function updateChart() {
+    const totals = getCategoryTotals();
+    chart.data.labels = Object.keys(totals);
+    chart.data.datasets[0].data = Object.values(totals);
+    chart.update();
+}
+
 
