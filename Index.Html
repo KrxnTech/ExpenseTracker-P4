@@ -71,15 +71,16 @@
             <p id="EDIT_EXPENSE">EDIT EXPENSE</p>
 
             <p class="HEADING">Edit Expense Title *</p>
-            <input id="title" name="title" type="text" placeholder="e.g Grocery Shopping" required>
+            <input id="edit_title" name="title" type="text" placeholder="e.g Grocery Shopping" required>
             <p class="error" id="titleError">Title is required</p>
 
             <p class="HEADING">Edit Amount ($) *</p>
-            <input id="amount" name="amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" required>
+            <input id="edit_amount" name="amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00"
+                required>
             <p class="error" id="amountError">Amount is required</p>
 
             <p class="HEADING">Edit Category *</p>
-            <select id="category" name="category" required>
+            <select id="edit_category" name="category" required>
                 <option value="" disabled selected>Select Category</option>
                 <option value="food">Food</option>
                 <option value="transport">Transport</option>
@@ -90,7 +91,7 @@
             <p class="error" id="categoryError">Category is required</p>
 
             <p class="HEADING">Edit Date *</p>
-            <input id="date" name="date" type="date" required>
+            <input id="edit_date" name="date" type="date" required>
             <p class="error" id="dateError">Date is required</p>
 
             <button id="EDIT_EXPENSE_BUTTON" type="button">SAVE CHANGES ✅</button>
@@ -132,12 +133,22 @@
         </div>
     </div>
 
+    <h1 id="chart_heading">CHART DATA</h1>
+    <div class="chart_parent_div">
+        <canvas id="expenseChart"></canvas>
+        <div id="chart_div"></div>
+    </div>
+
+
+
 
 
 
     <button id="clearAll">Clear All Expenses</button>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="Script.JS"></script>
+
 </body>
 
 </html>
